@@ -6,7 +6,12 @@ function queryByName(url){
     //跳转到action，进行查询
     window.location.href=url+"/items/findAll.action?query="+query;
 }
-
+function deleteAll(url){
+    //获得搜索框的值
+    var query = $("#searchName").val();
+    //跳转到action，进行查询
+    window.location.href=url+"/items/deleteAll.action?query="+query;
+}
 //分页查询
 //首页
 function firstPage(url) {

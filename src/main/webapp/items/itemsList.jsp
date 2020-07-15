@@ -25,7 +25,7 @@
 		</div>
 		<div class="col-md-4 col-lg-4">
 			<a href="addItem.jsp" class="btn btn-success">增加商品</a>
-			<input class="btn btn-danger" type="button" value="删除所有" onclick="">
+			<input class="btn btn-danger" type="button" value="删除所有" onclick="deleteAll('${pageContext.request.contextPath}')">
 		</div>
 	</div>
 	<div class="row" style="margin-top: 50px">
@@ -54,8 +54,8 @@
 						</c:if>
 					</td>
 					<td>
-						<a href="javascript:void(0)" class="btn btn-info" onclick="">修改</a>|
-						<a href="" class="btn btn-danger">删除</a>
+						<a href="javascript:void(0)" class="btn btn-info" onclick="location='edit.action?id='+${items.id}">修改</a>|
+						<a href="/items/deleteOne.action?id=${items.id}" class="btn btn-danger">删除</a>
 					</td>
 				</tr>
 			</c:forEach>

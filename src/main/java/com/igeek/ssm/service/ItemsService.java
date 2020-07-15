@@ -56,4 +56,16 @@ public class ItemsService {
     public void add(Items items){
         mapper.insertSelective(items);
     }
+
+    public void update(Items items) {
+        mapper.updateByPrimaryKey(items);
+    }
+
+    public Items findById(Integer id) {
+        return mapper.selectByPrimaryKey(id);
+    }
+
+    public void deleteOne(Integer id) {
+        mapper.deleteByPrimaryKey(id);
+    }
 }

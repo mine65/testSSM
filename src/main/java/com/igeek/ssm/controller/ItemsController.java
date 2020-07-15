@@ -11,6 +11,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -64,6 +66,66 @@ public class ItemsController {
 
         //添加商品
         service.add(items);
+        //为了避免重复提交表单的操作，可以选择重定向，地址栏显示目标地址
+        return "redirect:findAll.action";
+    }
+
+
+    @RequestMapping("/edit.action")
+    public String edit(String id,  Model model){
+        Items item = service.findById(Integer.parseInt(id));
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        String Datestr=sdf.format(item.getCreatetime());
+        //将数据传递至请求域中
+        model.addAttribute("item",item);
+        model.addAttribute("Datestr",Datestr);
+
+        //返回将要跳转的视图的逻辑名
+        return "editItem.jsp";
+    }
+
+    @RequestMapping("/update.action")
+    public String update(Items items, MultipartFile file) throws IOException {
+        //上传图片
+        if(file!=null){
+            //获得原始图片名称
+            String oldName = file.getOriginalFilename();
+            System.out.println("oldName = "+oldName);
+            //当前若上传图片
+            if(oldName!=null && oldName.length()>0){
+                //产生新的图片名称 = 随机数+原图片的后缀
+                String newName = UUID.randomUUID()+oldName.substring(oldName.lastIndexOf("."));
+
+                //将此图片上传至本地图片服务器路径
+                file.transferTo(new File("E:/ssm/day3/temp/"+newName));
+
+                //将此图片传值到items商品中
+                items.setPic("/pic/"+newName);
+            }
+        }
+
+        //添加商品
+        service.update(items);
+        //为了避免重复提交表单的操作，可以选择重定向，地址栏显示目标地址
+        return "redirect:findAll.action";
+    }
+
+    @RequestMapping("/deleteOne.action")
+    public String deleteOne(String id) throws IOException {
+        //添加商品
+        service.deleteOne(Integer.parseInt(id));
+        //为了避免重复提交表单的操作，可以选择重定向，地址栏显示目标地址
+        return "redirect:findAll.action";
+    }
+
+    @RequestMapping("/deleteAll.action")
+    public String deleteAll(String query , Integer pageNow , Model model) throws IOException {
+        PageVO vo = service.findAll(query, pageNow);
+        //添加商品
+        for (Items item:vo.getItemsList()) {
+            service.deleteOne(item.getId());
+        }
+
         //为了避免重复提交表单的操作，可以选择重定向，地址栏显示目标地址
         return "redirect:findAll.action";
     }
